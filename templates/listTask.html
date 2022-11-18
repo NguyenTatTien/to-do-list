@@ -1,0 +1,70 @@
+{% extends "userbase.html" %}
+
+{% block content %}
+    <div class="container">
+        <div class="jumptron text-center">
+            <h1>Welcome {{user.first_name}} {{user.last_name}} </h1>
+            <form action="/searchTask" method="post">
+               
+                <input type="hidden" name="hiddenProjectTaskId" value="{{ project_id }}" />
+                
+                <input id="search-input" type="search" placeholder="Search task" aria-label="Search" name="searchTaskId" class="form-control rounded"/>
+                     
+                <button type="submit" class="btn btn-outline-primary">Search</button>
+            </form>
+        </div>
+        <div class="jumptron text-center">
+            <br>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width:20%">Tasks</th>
+                        <th style="width:20%">Deadline</th>       
+                        <th style="width:20%">Project</th>     
+                        <th style="width:20%">Priority</th>
+                        <th style="width:20%">Status</th>                                                                           
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in lsTask %}
+                       
+                        <tr class="{{ task.getPriorityClass() }}">
+                            <td >{{ task.description }}</td>
+                            <td >{{ task.deadline }}</td>
+                            <td >{{ task.project.name }}</td>
+                            <td >{{ task.priority.text }}</td>
+                            <td >{{ task.status.description }}</td>
+                            <td class="text-center">
+                                <form action="/doneTask" method="post">
+                                    <input type="hidden" name="hiddenTaskId" value="{{ task.task_id }}" />
+                                    <button type="submit" class="btn btn-success">Done</button>
+                                </form>
+                            </td>
+                            <td class="text-center">
+                                <form action="/editTask" method="post">
+                                    <input type="hidden" name="hiddenTaskId" value="{{ task.task_id }}" />
+                                    
+                                    <button type="submit" class="btn btn-info">Edit</button>
+                                </form>
+                            </td>
+                            <td class="text-center">
+                                <form action="/deleteTask" method="post">
+                                    <input type="hidden" name="hiddenTaskId" value="{{ task.task_id }}" />
+                                    <button type="submit" class="btn btn-danger">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                       
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p class="lead"></p>
+            <form action="/newTask" method="post">
+                <input type="hidden" name="hiddenProjectTaskId" value="{{ project_id }}" />
+                <button type="submit" class="btn btn-lg btn-success">New task</button>
+            </form>
+           
+            
+        </div>
+    </div>
+{% endblock %} 
